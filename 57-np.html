@@ -1,11 +1,11 @@
 <script type="text/x-red" data-template-name="npro">
     <div class="form-row">
-        <label for="node-input-apikey"><i class="fa fa-key"></i> API Key</label>
-        <input type="password" id="node-input-apikey">
+        <label for="node-input-apikey"><i class="fa fa-flag"></i> API Key</label>
+        <input type="text" id="node-input-apikey">
     </div>
     <div class="form-row">
-        <label for="node-input-registrationId"><i class="fa fa-key"></i> registrationId</label>
-        <input type="password" id="node-input-registrationId">
+        <label for="node-input-registrationId"><i class="fa fa-flag"></i> registrationId</label>
+        <input type="text" id="node-input-registrationId">
     </div>
     <br/>
     <div class="form-row">
@@ -46,11 +46,9 @@
             title: {value:""},
             source: {value:""},
             message: {value:""},
-			priority: {value:0}
-        },
-        credentials: {
-            apikey: {type: "text"},
-            registrationId: {type: "text"}
+			priority: {value:""},
+			apikey: {value:""},
+			registrationId: {value:""}
         },
         color:"#a7c9a0",
         inputs:1,
