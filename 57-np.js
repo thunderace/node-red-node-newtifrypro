@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-
+var util = require("util");
 module.exports = function(RED) {
 	"use strict";
     function NPNode(n) {
@@ -32,13 +32,14 @@ module.exports = function(RED) {
 			} else {
 				var node = this;
 				this.on("input",function(msg) {
+				  node.warn(util.inspect(node));
 				  var message = {  
 					data: {
 					  type: 'ntp_message',
-						message: new Buffer(this.msg).toString('base64'),
-						priority:	this.priority,
-						title: new Buffer(this.title).toString('base64'),
-						source: new Buffer(this.source).toString('base64')
+						message: new Buffer(node.msg).toString('base64'),
+						priority:	node.priority,
+						title: new Buffer(node.title).toString('base64'),
+						source: new Buffer(node.source).toString('base64')
 					}
 				  };
 				  sendMessage(message, node.apikey, node.registrationId, function (err, data) {
@@ -124,13 +125,15 @@ var Constants = {
 
 var req = require('request');
 
-function sendMessage(message, senderKey, registrationIds, callback) {
+function sendMessage(message, senderKey, registrationId, callback) {
     var body = {};
     var requestBody;
     var post_options;
     var post_req;
     var timeout;
-
+	var registrationIds = [];
+	registrationIds.push(registrationId);
+	
     if (message.data === undefined) {
 		return callback(-1, 'message.data must be defined');
 	}
@@ -141,8 +144,6 @@ function sendMessage(message, senderKey, registrationIds, callback) {
 		message.data.timestamp = timestampSplit[0];
     }
 	body[Constants.PARAM_PAYLOAD_KEY] = message.data;
-
-
     body[Constants.JSON_REGISTRATION_IDS] = registrationIds;
     requestBody = JSON.stringify(body);
 
