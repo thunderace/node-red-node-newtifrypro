@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-var util = require("util");
 module.exports = function(RED) {
 	"use strict";
     function NPNode(n) {
@@ -32,7 +31,6 @@ module.exports = function(RED) {
 			} else {
 				var node = this;
 				this.on("input",function(msg) {
-				  node.warn(util.inspect(node));
 				  var message = {  
 					data: {
 					  type: 'ntp_message',
