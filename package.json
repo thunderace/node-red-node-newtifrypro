@@ -3,7 +3,7 @@
     "version"       : "0.0.1",
     "description"   : "A Node-RED node to send messages via NewtifryPro",
     "dependencies"  : {
-        "node-newtifrypro"   : "*"
+        "request"   : "*"
     },
     "repository" : {
         "type":"git",

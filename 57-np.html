@@ -1,0 +1,61 @@
+<script type="text/x-red" data-template-name="npro">
+    <div class="form-row">
+        <label for="node-input-apikey"><i class="fa fa-key"></i> API Key</label>
+        <input type="password" id="node-input-apikey">
+    </div>
+    <div class="form-row">
+        <label for="node-input-registrationId"><i class="fa fa-key"></i> registrationId</label>
+        <input type="password" id="node-input-registrationId">
+    </div>
+    <br/>
+    <div class="form-row">
+        <label for="node-input-title"><i class="fa fa-flag"></i> Title</label>
+        <input type="text" id="node-input-title" placeholder="Title">
+    </div>
+    <div class="form-row">
+        <label for="node-input-source"><i class="fa fa-flag"></i> Source</label>
+        <input type="text" id="node-input-source" placeholder="Node-RED">
+    </div>
+    <div class="form-row">
+        <label for="node-input-message"><i class="fa fa-tag"></i> Message</label>
+        <input type="text" id="node-input-message" placeholder="Message">
+    </div>
+    <div class="form-row">
+        <label for="node-input-priority"><i class="fa fa-tag"></i> Priority</label>
+        <input type="number" id="node-input-priority" placeholder="0">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="npro">
+    <p>Uses NewtifryPro to push the <b>msg.message</b> to an Android device that has NewtifryPro app installed.</p>
+    <p>Optionally uses <b>msg.source</b> to set the source (first part of title), if not already set in the properties.</p>
+    <p>The API-key is stored in a separate credentials file.</p>
+    <p>Uses NewtifryPro. See <i><a href="https://play.google.com/store/apps/details?id=com.newtifry.pro" target="_new">this link</a></i> to install.</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('npro',{
+        category: 'output',
+        defaults: {
+            title: {value:""},
+            source: {value:""},
+            message: {value:""},
+			priority: {value:0}
+        },
+        credentials: {
+            apikey: {type: "text"},
+            registrationId: {type: "text"}
+        },
+        color:"#a7c9a0",
+        inputs:1,
+        outputs:0,
+        icon: "npro.png",
+        align: "right",
+        label: function() {
+            return this.name||this.title||"npro";
+        },
+        labelStyle: function() {
+            return this.name?"node_label_italic":"";
+        }
+    });
+</script>
