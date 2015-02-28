@@ -51,12 +51,7 @@ module.exports = function(RED) {
         });
     }
 
-    RED.nodes.registerType("npro",NPNode, {
-        credentials: {
-            apikey: {type: "password"},
-            registrationId: { type: "string"}
-        }
-    });
+    RED.nodes.registerType("npro",NPNode);
 }
 
 var Constants = {
