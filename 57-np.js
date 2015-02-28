@@ -17,37 +17,35 @@ module.exports = function(RED) {
 	"use strict";
     function NPNode(n) {
         RED.nodes.createNode(this,n);
-        this.title = n.title;
+        this.title = n.title || "";
         this.source = n.source || "";
-        this.msg = n.message || "";
+        this.message = n.message || "";
         this.priority =  Number( n.priority || 0);
 		this.apikey = n.apikey || undefined;
 		this.registrationId = n.registrationId || undefined;
-        if (this.apikey == undefined || this.registrationId == undefined) { 
-          this.error("No API key or registrationId set"); 
-        } else {
-			if (this.title == "") {
-				this.error("No Title key set"); 
-			} else {
-				var node = this;
-				this.on("input",function(msg) {
-				  var message = {  
-					data: {
-					  type: 'ntp_message',
-						message: new Buffer(node.msg).toString('base64'),
-						priority:	node.priority,
-						title: new Buffer(node.title).toString('base64'),
-						source: new Buffer(node.source).toString('base64')
-					}
-				  };
-				  sendMessage(message, node.apikey, node.registrationId, function (err, data) {
-					  if (err) {
-						node.warn("NP error: " + err);
-					  }
-				  });            
-				});
-			}
-		}
+		var node = this;
+		this.on("input",function(msg) {
+			var message = msg.message || node.message || "";
+			var title = msg.title || node.title || "";
+			var priority = msg.priority || node.priority || 0;
+			var source = msg.source || node.source || 0;
+			var apikey = msg.apikey || node.apikey || 0;
+			var registrationId = msg.registrationId || node.registrationId || 0;
+			var message = {  
+				data: {
+					type: 'ntp_message',
+					message: new Buffer(message).toString('base64'),
+					priority:	priority,
+					title: new Buffer(title).toString('base64'),
+					source: new Buffer(source).toString('base64')
+				}
+			};
+			sendMessage(message, apikey, registrationId, function (err, data) {
+				if (err) {
+					node.warn("NP error: " + err);
+				}
+			});            
+		});
     }
     RED.nodes.registerType("npro",NPNode);
 }

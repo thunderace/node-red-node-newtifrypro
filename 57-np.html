@@ -1,4 +1,8 @@
 <script type="text/x-red" data-template-name="npro">
+	<div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
     <div class="form-row">
         <label for="node-input-apikey"><i class="fa fa-flag"></i> API Key</label>
         <input type="text" id="node-input-apikey">
@@ -43,6 +47,7 @@
     RED.nodes.registerType('npro',{
         category: 'output',
         defaults: {
+            name: {value:""},
             title: {value:""},
             source: {value:""},
             message: {value:""},
@@ -56,7 +61,7 @@
         icon: "bridge.png",
         align: "right",
         label: function() {
-            return this.name||this.title||"npro";
+            return this.name||"npro";
         },
         labelStyle: function() {
             return this.name?"node_label_italic":"";
