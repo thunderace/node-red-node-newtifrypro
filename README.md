@@ -7,7 +7,7 @@ Install
 
 Run the following command in the root directory of your Node-RED install (Not yet : work in progress)
 
-    npm install node-red-node-newtifrypro
+    npm install node-red-newtifrypro
 
 
 Usage
@@ -17,4 +17,5 @@ Uses NewtifryPro (NP) to push the **msg.message** and **msg.title** to an Androi
 
 Optionally uses **msg.source** to set the source, if not already set in the properties.
 
-The API-key is stored in a separate credentials file.
+See node-example.json for more informations
+
