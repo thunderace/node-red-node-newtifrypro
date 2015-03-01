@@ -29,22 +29,26 @@ module.exports = function(RED) {
 			var title = msg.title || node.title || "";
 			var priority = msg.priority || node.priority || 0;
 			var source = msg.source || node.source || 0;
-			var apikey = msg.apikey || node.apikey || 0;
-			var registrationId = msg.registrationId || node.registrationId || 0;
-			var message = {  
-				data: {
-					type: 'ntp_message',
-					message: new Buffer(message).toString('base64'),
-					priority:	priority,
-					title: new Buffer(title).toString('base64'),
-					source: new Buffer(source).toString('base64')
-				}
-			};
-			sendMessage(message, apikey, registrationId, function (err, data) {
-				if (err) {
-					node.warn("NP error: " + err);
-				}
-			});            
+			var apikey = msg.apikey || node.apikey || undefined;
+			var registrationId = msg.registrationId || node.registrationId || undefined;
+			if (apikey == undefined || registrationId == undefined || title == undefined) {
+				this.error("No API key or registrationId or title set"); 
+			} else {
+				var message = {  
+					data: {
+						type: 'ntp_message',
+						message: new Buffer(message).toString('base64'),
+						priority:	priority,
+						title: new Buffer(title).toString('base64'),
+						source: new Buffer(source).toString('base64')
+					}
+				};
+				sendMessage(message, apikey, registrationId, function (err, data) {
+					if (err) {
+						node.warn("NP error: " + err);
+					}
+				});            
+			}
 		});
     }
     RED.nodes.registerType("npro",NPNode);
