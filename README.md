@@ -2,7 +2,7 @@ node-red-node-newtifrypro
 =========================
 A <a href="http://nodered.org" target="_new">Node-RED</a> node to send messages via <a href="https://play.google.com/store/apps/details?id=com.newtifry.pro">NewtifryPro</a>.
 
-![screenshot](https://github.com/njh/node-red-osc/raw/master/screenshot.png)
+![screenshot](https://github.com/thunderace/node-red-node-newtifrypro/raw/master/screenshot.png)
 
 Installation
 ------------
