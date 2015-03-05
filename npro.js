@@ -14,16 +14,6 @@
  * limitations under the License.
  **/
 
-
-
-  	image: new Buffer('http://www.newtifry.org/test_newtifry.jpg').toString('base64'),
-//		url: new Buffer('url').toString('base64'),
-//		image: new Buffer('image url').toString('base64'),
-//		speak: 1, // -1 : default app config - 0 : don't speak - 1 : always speak
-//		nocache: 0, // -1 : default app config - 0 : don't cache image(s) - 1 always cache images
-//		notify : 1 // -1 : default app config - 0 : don't notify - 1 always notify
-
-
 module.exports = function(RED) {
   "use strict";
   function NPNode(n) {
@@ -62,27 +52,43 @@ module.exports = function(RED) {
       var notify = msg.notify || node.notify || -1;
       
       if (apikey == undefined || registrationId == undefined || title == undefined) {
-        this.error("No APIkey, registrationId or title set"); 
+        node.error("No APIkey, registrationId or title set"); 
       } else {
-        var message = {
+        var message2Send = {
           data: {
             type: 'ntp_message',
-            message: new Buffer(message).toString('base64'),
-            priority:	priority,
             title: new Buffer(title).toString('base64'),
-            source: new Buffer(source).toString('base64'),
-            url: new Buffer(url).toString('base64'),
+            priority:  priority,
             speak: speak,
             nocache: nocache,
-            notify: notify,
-            image1: image1,
-            image2: image2,
-            image3: image3,
-            image4: image4,
-            image5: image5
+            notify: notify
           }
         };  
-        sendMessage(message, apikey, registrationId, function (err, data) {
+        if (message != null) {
+          message2Send.data.message = new Buffer(message).toString('base64');
+        }
+        if (source != null) {
+          message2Send.data.source = new Buffer(source).toString('base64');
+        }
+        if (url != null) {
+          message2Send.data.url = new Buffer(url).toString('base64');
+        }
+        if (image1 != null) {
+          message2Send.data.image1 = new Buffer(image1).toString('base64');
+        }
+        if (image2 != null) {
+          message2Send.data.image2 = new Buffer(image2).toString('base64');
+        }
+        if (image3 != null) {
+          message2Send.data.image3 = new Buffer(image3).toString('base64');
+        }
+        if (image4 != null) {
+          message2Send.data.image4 = new Buffer(image4).toString('base64');
+        }
+        if (image5 != null) {
+          message2Send.data.image5 = new Buffer(image5).toString('base64');
+        }
+        sendMessage(message2Send, apikey, registrationId, function (err, data) {
           if (err) {
             node.warn("NP error: " + err);
           }
