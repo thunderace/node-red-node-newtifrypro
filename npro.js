@@ -13,6 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
+
+
+
+  	image: new Buffer('http://www.newtifry.org/test_newtifry.jpg').toString('base64'),
+//		url: new Buffer('url').toString('base64'),
+//		image: new Buffer('image url').toString('base64'),
+//		speak: 1, // -1 : default app config - 0 : don't speak - 1 : always speak
+//		nocache: 0, // -1 : default app config - 0 : don't cache image(s) - 1 always cache images
+//		notify : 1 // -1 : default app config - 0 : don't notify - 1 always notify
+
+
 module.exports = function(RED) {
   "use strict";
   function NPNode(n) {
@@ -23,6 +34,15 @@ module.exports = function(RED) {
     this.priority =  Number( n.priority || 0);
     this.apikey = n.apikey || undefined;
     this.registrationId = n.registrationId || undefined;
+    this.image1 = n.image1 || undefined;
+    this.image2 = n.image2 || undefined;
+    this.image3 = n.image3 || undefined;
+    this.image4 = n.image4 || undefined;
+    this.image5 = n.image5 || undefined;
+    this.url = n.url || undefined;
+    this.speak = n.speak || -1;
+    this.nocache = n.nocache || -1;
+    this.notify = n.notify || -1;
     var node = this;
     this.on("input",function(msg) {
       var message = msg.message || node.message || "";
@@ -31,6 +51,16 @@ module.exports = function(RED) {
       var source = msg.source || node.source || 0;
       var apikey = msg.apikey || node.apikey || undefined;
       var registrationId = msg.registrationId || node.registrationId || undefined;
+      var url = msg.url || node.url || null;
+      var image1 = msg.image1 || node.image1 || null;
+      var image2 = msg.image2 || node.image2 || null;
+      var image3 = msg.image3 || node.image3 || null;
+      var image4 = msg.image4 || node.image4 || null;
+      var image5 = msg.image5 || node.image5 || null;
+      var speak = msg.speak || node.speak || -1;
+      var nocache = msg.nocache || node.nocache || -1;
+      var notify = msg.notify || node.notify || -1;
+      
       if (apikey == undefined || registrationId == undefined || title == undefined) {
         this.error("No APIkey, registrationId or title set"); 
       } else {
@@ -40,7 +70,16 @@ module.exports = function(RED) {
             message: new Buffer(message).toString('base64'),
             priority:	priority,
             title: new Buffer(title).toString('base64'),
-            source: new Buffer(source).toString('base64')
+            source: new Buffer(source).toString('base64'),
+            url: new Buffer(url).toString('base64'),
+            speak: speak,
+            nocache: nocache,
+            notify: notify,
+            image1: image1,
+            image2: image2,
+            image3: image3,
+            image4: image4,
+            image5: image5
           }
         };  
         sendMessage(message, apikey, registrationId, function (err, data) {

@@ -8,8 +8,8 @@
     <input type="text" id="node-input-apikey">
   </div>
   <div class="form-row">
-    <label for="node-input-registrationId"><i class="fa fa-flag"></i> registrationId*</label>
-    <input type="text" id="node-input-registrationId">
+    <label for="node-input-registrationId" style="width: 100% !important;"><i class="fa fa-flag"></i> registrationId*</label>
+    <input type="text" style="width: 100% !important;" id="node-input-registrationId">
   </div>
   <br/>
   <div class="form-row">
@@ -17,22 +17,69 @@
     <input type="text" id="node-input-title" placeholder="Title">
   </div>
   <div class="form-row">
-    <label for="node-input-source"><i class="fa fa-flag"></i> Source</label>
+    <label for="node-input-source"><i class="fa fa-empire"></i> Source</label>
     <input type="text" id="node-input-source" placeholder="Node-RED">
   </div>
-  <div class="form-row">
-    <label for="node-input-message"><i class="fa fa-tag"></i> Message</label>
-    <input type="text" id="node-input-message" placeholder="Message">
+  
+  <div class="form-row" style="margin-bottom: 0px;">
+        <label for="node-input-message" style="width: 100% !important;"><i class="fa fa-comments"></i> Message</label>
+        <input type="hidden" id="node-input-message" autofocus="autofocus">
   </div>
-
+  <div class="form-row node-text-editor-row">
+    <div style="height: 100px;" class="node-text-editor" id="node-input-message-editor" ></div>
+  </div>
   <div class="form-row">
-    <label for="node-input-priority"><i class="fa fa-empire"></i> Priority</label>
+    <label for="node-input-priority" style="width:80px !important"><i class="fa"></i> Priority</label>
     <select id="node-input-priority" style="width:125px !important">
       <option value="0">None</option>
       <option value="1">Information</option>
       <option value="2">Warning</option>
       <option value="3">Alert</option>
     </select>
+    <label for="node-input-notify" style="width:80px !important"><i class="fa"></i> Notify</label>
+    <select id="node-input-notify" style="width:125px !important">
+      <option value="-1">App default</option>
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-speak" style="width:80px !important"><i class="fa"></i> Speak</label>
+    <select id="node-input-speak" style="width:125px !important">
+      <option value="-1">App default</option>
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </select>
+    <label for="node-input-cache" style="width:80px !important"><i class="fa"></i> Img cache</label>
+    <select id="node-input-cache" style="width:125px !important">
+      <option value="-1">App default</option>
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-url"><i class="fa"></i> URL</label>
+    <input type="text" id="node-input-url">
+  </div>
+  <div class="form-row">
+    <label for="node-input-image1"><i class="fa"></i> image1 URL</label>
+    <input type="text" id="node-input-image1">
+  </div>
+  <div class="form-row">
+    <label for="node-input-image2"><i class="fa"></i> image2 URL</label>
+    <input type="text" id="node-input-image2">
+  </div>
+  <div class="form-row">
+    <label for="node-input-image3"><i class="fa"></i> image3 URL</label>
+    <input type="text" id="node-input-image3">
+  </div>
+  <div class="form-row">
+    <label for="node-input-image4"><i class="fa"></i> image4 URL</label>
+    <input type="text" id="node-input-image4">
+  </div>
+  <div class="form-row">
+    <label for="node-input-image5"><i class="fa"></i> image5 URL</label>
+    <input type="text" id="node-input-image5">
   </div>
 </script>
 
@@ -52,7 +99,16 @@
       message: {value:""},
       priority: {value:""},
       apikey: {value:""},
-      registrationId: {value:""}
+      registrationId: {value:""},
+      notify: {value:"-1"},
+      speak: {value:"-1"},
+      cache: {value:"-1"},
+      url: {value:""},
+      image1: {value:""},
+      image2: {value:""},
+      image3: {value:""},
+      image4: {value:""},
+      image5: {value:""}
     },
     color:"#a7c9a0",
     inputs:1,
@@ -64,6 +120,49 @@
     },
     labelStyle: function() {
       return this.name?"node_label_italic":"";
-    }
+    },
+    oneditprepare: function() {
+        $( "#node-input-outputs" ).spinner({
+            min:1
+        });
+        function functionDialogResize() {
+            var rows = $("#dialog-form>div:not(.node-text-editor-row)");
+            var height = $("#dialog-form").height();
+            for (var i=0;i<rows.size();i++) {
+                height -= $(rows[i]).outerHeight(true);
+            }
+            var editorRow = $("#dialog-form>div.node-text-editor-row");
+            height -= (parseInt(editorRow.css("marginTop"))+parseInt(editorRow.css("marginBottom")));
+            $(".node-text-editor").css("height",height+"px");
+        };
+        $( "#dialog" ).on("dialogresize", functionDialogResize);
+        $( "#dialog" ).one("dialogopen", function(ev) {
+            var size = $( "#dialog" ).dialog('option','sizeCache-function');
+            if (size) {
+                $("#dialog").dialog('option','width',size.width);
+                $("#dialog").dialog('option','height',size.height);
+                functionDialogResize();
+            }
+        });
+        $( "#dialog" ).one("dialogclose", function(ev,ui) {
+            var height = $( "#dialog" ).dialog('option','height');
+            $( "#dialog" ).off("dialogresize",functionDialogResize);
+        });
+        var that = this;
+        require(["orion/editor/edit"], function(edit) {
+            that.editor = edit({
+                parent:document.getElementById('node-input-message-editor'),
+                lang:"text",
+                showLinesRuler:false,
+                showFoldingRuler:false,
+                contents: $("#node-input-message").val()
+            });
+//            $("#node-input-name").focus();
+        });
+    },
+    oneditsave: function() {
+        $("#node-input-message").val(this.editor.getText());
+        delete this.editor;
+    }    
   });
 </script>
