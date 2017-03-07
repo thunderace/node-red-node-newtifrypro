@@ -11,6 +11,10 @@
     <label for="node-input-registrationId" style="width: 100% !important;"><i class="fa fa-flag"></i> registrationId*</label>
     <input type="text" style="width: 100% !important;" id="node-input-registrationId">
   </div>
+  <div class="form-row">
+    <label for="node-input-topic" style="width: 100% !important;"><i class="fa fa-flag"></i> or topic*</label>
+    <input type="text" style="width: 100% !important;" id="node-input-topic">
+  </div>
   <br/>
   <div class="form-row">
     <label for="node-input-title"><i class="fa fa-flag"></i> Title*</label>
@@ -26,7 +30,7 @@
         <input type="hidden" id="node-input-message" autofocus="autofocus">
   </div>
   <div class="form-row node-text-editor-row">
-    <div style="height: 100px;" class="node-text-editor" id="node-input-message-editor" ></div>
+        <div style="height: 250px; min-height:150px;" class="node-text-editor" id="node-input-message-editor"></div>
   </div>
   <div class="form-row">
     <label for="node-input-priority" style="width:80px !important"><i class="fa"></i> Priority</label>
@@ -91,7 +95,7 @@
 
 <script type="text/javascript">
   RED.nodes.registerType('npro',{
-    category: 'output',
+    category: 'mobile',
     defaults: {
       name: {value:""},
       title: {value:""},
@@ -100,6 +104,7 @@
       priority: {value:""},
       apikey: {value:""},
       registrationId: {value:""},
+      topic: {value:""},
       notify: {value:"-1"},
       speak: {value:"-1"},
       cache: {value:"-1"},
@@ -122,47 +127,28 @@
       return this.name?"node_label_italic":"";
     },
     oneditprepare: function() {
-        $( "#node-input-outputs" ).spinner({
-            min:1
-        });
-        function functionDialogResize() {
-            var rows = $("#dialog-form>div:not(.node-text-editor-row)");
-            var height = $("#dialog-form").height();
-            for (var i=0;i<rows.size();i++) {
-                height -= $(rows[i]).outerHeight(true);
-            }
-            var editorRow = $("#dialog-form>div.node-text-editor-row");
-            height -= (parseInt(editorRow.css("marginTop"))+parseInt(editorRow.css("marginBottom")));
-            $(".node-text-editor").css("height",height+"px");
-        };
-        $( "#dialog" ).on("dialogresize", functionDialogResize);
-        $( "#dialog" ).one("dialogopen", function(ev) {
-            var size = $( "#dialog" ).dialog('option','sizeCache-function');
-            if (size) {
-                $("#dialog").dialog('option','width',size.width);
-                $("#dialog").dialog('option','height',size.height);
-                functionDialogResize();
-            }
-        });
-        $( "#dialog" ).one("dialogclose", function(ev,ui) {
-            var height = $( "#dialog" ).dialog('option','height');
-            $( "#dialog" ).off("dialogresize",functionDialogResize);
-        });
-        var that = this;
-        require(["orion/editor/edit"], function(edit) {
-            that.editor = edit({
-                parent:document.getElementById('node-input-message-editor'),
-                lang:"text",
-                showLinesRuler:false,
-                showFoldingRuler:false,
-                contents: $("#node-input-message").val()
-            });
-//            $("#node-input-name").focus();
-        });
+      var that = this;
+      this.editor = RED.editor.createEditor({
+        id: 'node-input-message-editor',
+        mode: 'ace/mode/text',
+        value: $("#node-input-message").val()
+      });
+      this.editor.focus();
     },
     oneditsave: function() {
-        $("#node-input-message").val(this.editor.getText());
-        delete this.editor;
+      $("#node-input-message").val(this.editor.getValue());
+      delete this.editor;
+    },
+    oneditresize: function(size) {
+      var rows = $("#dialog-form>div:not(.node-text-editor-row)");
+      var height = $("#dialog-form").height();
+      for (var i=0;i<rows.size();i++) {
+        height -= $(rows[i]).outerHeight(true);
+      }
+      var editorRow = $("#dialog-form>div.node-text-editor-row");
+      height -= (parseInt(editorRow.css("marginTop"))+parseInt(editorRow.css("marginBottom")));
+      $(".node-text-editor").css("height",height+"px");
+      this.editor.resize();
     }    
   });
 </script>
