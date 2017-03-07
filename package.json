@@ -1,5 +1,5 @@
 {
-    "name"          : "node-red-newtifrypro",
+    "name"          : "node-red-contrib-newtifrypro",
     "version"       : "1.0.0",
     "description"   : "A Node-RED node to send messages via NewtifryPro",
     "dependencies"  : {
