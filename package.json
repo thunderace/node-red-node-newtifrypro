@@ -1,6 +1,6 @@
 {
     "name"          : "node-red-newtifrypro",
-    "version"       : 1.0.1",
+    "version"       : "1.0.1",
     "description"   : "DEPRECATED-A Node-RED node to send messages via NewtifryPro",
     "dependencies"  : {
         "newtifrypro" : "*"
